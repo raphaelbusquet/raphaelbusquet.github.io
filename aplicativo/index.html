@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descubra como qualquer app funciona — passo a passo</title>
+<meta name="description" content="Como usar o REA (Reverse Engineer Anything) com o Claude Code para entender uma funcionalidade de um app ou site e criar a sua versão.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%234340EE"/><circle cx="14" cy="14" r="6" stroke="%23fff" stroke-width="2.6" fill="none"/><path d="M18.5 18.5 24 24" stroke="%23fff" stroke-width="2.8" stroke-linecap="round"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; --bg:#06060E; --linha:#23264A; --texto:#ECEDF5; --fraco:#9DA5C0; --destaque:#4340EE; --acento:#6C69FF; --aviso:#E2622F; }
+  * { box-sizing: border-box; }
+  body { margin:0; background: radial-gradient(900px 600px at 10% -10%, #1E2590 0%, transparent 60%), radial-gradient(800px 600px at 110% 110%, #0A3B30 0%, transparent 60%), var(--bg); background-attachment: fixed; color:var(--texto); font:16px/1.6 "Poppins", system-ui, sans-serif; }
+  main { max-width: 40rem; margin: 0 auto; padding: 48px 16px 64px; }
+  .tag { display:inline-block; font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--acento); margin-bottom:10px; }
+  h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); line-height:1.15; letter-spacing:-.02em; margin:0 0 10px; }
+  p.sub { color:var(--fraco); margin:0 0 36px; }
+  section { background: rgba(15,16,32,.85); border:1px solid var(--linha); border-radius:20px; padding: 24px 20px; margin-bottom: 20px; }
+  h2 { font-size:1.15rem; margin:0 0 16px; display:flex; align-items:center; gap:10px; }
+  h2 .n { display:inline-flex; width:30px; height:30px; border-radius:50%; background:var(--destaque); align-items:center; justify-content:center; font-size:.9rem; }
+  ol { margin:0; padding:0; list-style:none; counter-reset:passo; }
+  ol > li { counter-increment:passo; position:relative; padding-left:42px; margin-bottom:16px; }
+  ol > li::before { content:counter(passo); position:absolute; left:0; top:1px; width:28px; height:28px; border-radius:8px; background:rgba(67,64,238,.18); color:var(--acento); font-weight:700; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+  b { color:#fff; }
+  a { color: var(--acento); }
+  .campo { margin-top:10px; background:#08091A; border:1px solid var(--linha); border-radius:12px; padding:10px 12px; display:flex; gap:10px; align-items:center; justify-content:space-between; }
+  .campo code { font-family: ui-monospace, Menlo, monospace; font-size:.92rem; color:#fff; word-break: break-word; }
+  .prompt code { font-family: inherit; font-size:.95rem; word-break: normal; overflow-wrap: anywhere; }
+  .dica { font-size:.9rem; color:var(--fraco); margin:8px 0 0; }
+  button.copiar { flex-shrink:0; border:0; border-radius:10px; background:var(--destaque); color:#fff; font:600 .85rem "Poppins", sans-serif; padding:8px 12px; cursor:pointer; }
+  button.copiar.ok { background:#1f9d6b; }
+  .ex { margin: 0; padding-left: 20px; } .ex li { margin-bottom: 8px; }
+  .aviso { border-color: rgba(226,98,47,.45); }
+  .aviso ul { margin:0; padding-left:20px; } .aviso li { margin-bottom:8px; }
+  .fim { text-align:center; margin-top:36px; color:var(--fraco); }
+  .fim a { display:inline-block; margin-top:10px; background:var(--destaque); color:#fff; text-decoration:none; font-weight:600; padding:12px 22px; border-radius:14px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">Passo a passo</span>
+  <h1>Descubra como qualquer app funciona</h1>
+  <p class="sub">Com o <b>REA (Reverse Engineer Anything)</b>, o Claude investiga um app ou site por dentro, te explica em palavras simples como uma funcionalidade funciona e monta a sua versão no seu projeto.</p>
+
+  <section>
+    <h2><span class="n">1</span>O que você precisa</h2>
+    <ol>
+      <li><b>Claude Code</b> (precisa de plano pago do Claude). O REA também funciona com Codex, Cursor e Gemini CLI.</li>
+      <li><b>Node.js 22 ou 24</b>: baixe a versão LTS em <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>. <span style="color:var(--fraco)">(As versões 23 e 25 não funcionam.)</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Instalar o REA</h2>
+    <ol>
+      <li>No terminal, rode:
+        <div class="campo"><code>npx rea-agents setup</code><button class="copiar" data-texto="npx rea-agents setup">Copiar</button></div>
+      </li>
+      <li>Escolha o <b>Claude Code</b>, revise as mudanças que ele mostra e <b>aprove</b>. Ele faz backup das suas configurações antes.</li>
+      <li><b>Feche e abra o Claude Code de novo</b> pra ele carregar o REA.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Usar</h2>
+    <ol>
+      <li>Abra o Claude Code na pasta do seu projeto.</li>
+      <li>Cole o prompt, trocando o app e a funcionalidade:
+        <div class="campo prompt"><code id="p1">Usa o REA pra investigar como o [nome do app ou site] faz [a funcionalidade que eu quero]. Me explica em palavras simples como funciona, me mostra as evidências e depois monta uma versão disso pro meu projeto.</code><button class="copiar" data-alvo="p1">Copiar</button></div>
+      </li>
+    </ol>
+    <p style="margin:6px 0 8px"><b>Ideias pra testar:</b></p>
+    <ul class="ex">
+      <li>O CRM que move o cliente sozinho pra próxima etapa do funil.</li>
+      <li>O sistema de agendamento que manda lembrete automático pro cliente.</li>
+      <li>A busca, o filtro ou o editor de um app que você usa todo dia.</li>
+    </ul>
+  </section>
+
+  <section class="aviso">
+    <h2>Importante</h2>
+    <ul>
+      <li>O REA é <b>gratuito e open source</b> e roda no seu computador. O Claude Code precisa de plano pago.</li>
+      <li>Pra analisar apps nativos (instalados no computador), o REA pode pedir o Ghidra, o Hopper ou o IDA. Sites e apps em JavaScript não precisam de nada extra.</li>
+      <li>Use pra <b>entender</b> como uma funcionalidade funciona e criar a sua versão, não pra copiar código, marca ou conteúdo de outra empresa. Alguns serviços proíbem engenharia reversa nos termos de uso.</li>
+    </ul>
+    <p class="dica">Projeto oficial: <a href="https://github.com/morluto/rea" target="_blank" rel="noopener">github.com/morluto/rea</a></p>
+  </section>
+
+  <div class="fim">
+    Mais conteúdo assim todo dia sobre IA e tecnologia<br>
+    <a href="https://www.instagram.com/raphaelbusquet/" target="_blank" rel="noopener">Seguir @raphaelbusquet</a>
+  </div>
+</main>
+<script>
+  document.querySelectorAll("button.copiar").forEach((b) => {
+    b.addEventListener("click", async () => {
+      const texto = b.dataset.texto ?? document.getElementById(b.dataset.alvo).textContent;
+      try { await navigator.clipboard.writeText(texto); } catch (e) {
+        const t = document.createElement("textarea"); t.value = texto; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove();
+      }
+      b.textContent = "Copiado!"; b.classList.add("ok");
+      setTimeout(() => { b.textContent = "Copiar"; b.classList.remove("ok"); }, 1600);
+    });
+  });
+</script>
+</body>
+</html>
