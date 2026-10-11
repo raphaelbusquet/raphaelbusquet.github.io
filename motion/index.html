@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion com o Claude — passo a passo</title>
+<meta name="description" content="Como criar vídeos de motion design só descrevendo o que você quer: Claude Code + HyperFrames, passo a passo e prompt pronto.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%23020A05"/><path d="M8 22V10l8 7 8-7v12" stroke="%233BFF7A" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; --bg:#020A05; --card:rgba(4,20,10,.88); --linha:rgba(59,255,122,.32); --g:#3BFF7A; --gc:#CFFFDE; --texto:#E6F5EA; --fraco:#93B8A0; --aviso:#FF8A5C; }
+  * { box-sizing: border-box; }
+  body { margin:0; color:var(--texto); font:16px/1.65 "Poppins", system-ui, sans-serif;
+    background: radial-gradient(1000px 700px at 50% -10%, #0B2A16 0%, transparent 65%), linear-gradient(rgba(59,255,122,.05) 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, rgba(59,255,122,.05) 1px, transparent 1px) 0 0/48px 48px, var(--bg); background-attachment: fixed; }
+  main { max-width: 42rem; margin: 0 auto; padding: 44px 16px 64px; }
+  .hud { font: 12px/1 "JetBrains Mono", monospace; letter-spacing: .18em; color: var(--fraco); text-transform: uppercase; display:flex; justify-content:space-between; margin-bottom: 28px; }
+  .hud .rec { color:#FF6B78; }
+  h1 { font-family: "Archivo Black", sans-serif; font-size: clamp(2.2rem, 9vw, 3.4rem); line-height:.98; margin:0 0 12px; color: var(--gc); text-shadow: 0 0 18px rgba(59,255,122,.7), 0 0 50px rgba(59,255,122,.35); text-transform: uppercase; letter-spacing:-.01em; }
+  p.sub { color:var(--fraco); margin:0 0 32px; }
+  section { background: var(--card); border:1px solid var(--linha); border-radius:18px; padding: 22px 18px; margin-bottom: 18px; box-shadow: 0 0 30px rgba(59,255,122,.07); }
+  h2 { font-family: "JetBrains Mono", monospace; font-size:1rem; letter-spacing:.06em; text-transform: uppercase; color: var(--g); margin:0 0 14px; display:flex; gap:10px; align-items:center; }
+  h2 .n { display:inline-flex; min-width:30px; height:30px; padding:0 8px; border-radius:8px; background:var(--g); color:var(--bg); align-items:center; justify-content:center; font-weight:700; }
+  ol { margin:0; padding:0; list-style:none; counter-reset:p; }
+  ol > li { counter-increment:p; position:relative; padding-left:38px; margin-bottom:14px; }
+  ol > li::before { content: counter(p, decimal-leading-zero); position:absolute; left:0; top:2px; font: 700 13px/1 "JetBrains Mono", monospace; color: var(--g); opacity:.85; }
+  b { color:#fff; font-weight:600; }
+  a { color: var(--g); }
+  .cmd { margin-top:8px; background:#010603; border:1px solid var(--linha); border-radius:10px; padding:10px 12px; display:flex; gap:10px; align-items:center; justify-content:space-between; }
+  .cmd code { font: 14px/1.5 "JetBrains Mono", monospace; color: var(--gc); word-break: break-word; white-space: pre-wrap; }
+  .cmd .rot { display:block; font: 11px/1 "JetBrains Mono", monospace; color: var(--fraco); letter-spacing:.12em; text-transform: uppercase; margin-bottom:6px; }
+  button.copiar { flex-shrink:0; border:0; border-radius:8px; background:var(--g); color:var(--bg); font: 700 12px "JetBrains Mono", monospace; letter-spacing:.06em; padding:8px 10px; cursor:pointer; text-transform: uppercase; }
+  button.copiar.ok { background:#fff; }
+  .prompt code { font-family: "Poppins", sans-serif; font-size: 14.5px; }
+  .dica { font-size:.93rem; color: var(--fraco); margin: 6px 0 0; }
+  .aviso { border-color: rgba(255,138,92,.45); }
+  .aviso h2 { color: var(--aviso); }
+  .aviso ul { margin:0; padding-left:20px; } .aviso li { margin-bottom:8px; }
+  .fim { text-align:center; margin-top:34px; color:var(--fraco); }
+  .fim a { display:inline-block; margin-top:10px; background:var(--g); color:var(--bg); text-decoration:none; font: 700 15px "JetBrains Mono", monospace; letter-spacing:.04em; padding:12px 22px; border-radius:12px; box-shadow: 0 0 24px rgba(59,255,122,.45); }
+</style>
+</head>
+<body>
+<main>
+  <div class="hud"><span>Claude · Motion</span><span class="rec">● Setup</span></div>
+  <h1>Motion só com texto</h1>
+  <p class="sub">O Claude não “gera” o vídeo: ele escreve a animação como código (HTML + GSAP) e o HyperFrames renderiza quadro a quadro. Você só descreve.</p>
+
+  <section>
+    <h2><span class="n">1</span>O que você precisa</h2>
+    <ol>
+      <li><b>Claude Code</b>: precisa de um plano pago do Claude (Pro ou Max). Recomendo o modelo <b>Opus</b>.</li>
+      <li><b>Node.js 22 ou mais novo</b>: baixe em <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>.</li>
+      <li><b>FFmpeg</b>: no Mac:
+        <div class="cmd"><code>brew install ffmpeg</code><button class="copiar" data-texto="brew install ffmpeg">Copiar</button></div>
+        <p class="dica">No Windows: <code style="font-family:JetBrains Mono">winget install ffmpeg</code></p>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Instalar</h2>
+    <ol>
+      <li>Instale o Claude Code no terminal (Mac/Linux):
+        <div class="cmd"><code>curl -fsSL https://claude.ai/install.sh | bash</code><button class="copiar" data-texto="curl -fsSL https://claude.ai/install.sh | bash">Copiar</button></div>
+        <p class="dica">No Windows (PowerShell): <code style="font-family:JetBrains Mono">irm https://claude.ai/install.ps1 | iex</code></p>
+      </li>
+      <li>Crie o projeto de vídeo (isso já instala as skills do HyperFrames pro Claude):
+        <div class="cmd"><code>npx hyperframes init meu-motion --example blank --resolution landscape</code><button class="copiar" data-texto="npx hyperframes init meu-motion --example blank --resolution landscape">Copiar</button></div>
+        <p class="dica">Pra Reels na vertical, troque <code style="font-family:JetBrains Mono">landscape</code> por <code style="font-family:JetBrains Mono">portrait</code>.</p>
+      </li>
+      <li>Entre na pasta e abra o Claude:
+        <div class="cmd"><code>cd meu-motion && claude</code><button class="copiar" data-texto="cd meu-motion && claude">Copiar</button></div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>O prompt</h2>
+    <p style="margin:0 0 10px">O segredo são as <b>referências</b>: paleta, fontes, grade, ritmo e easing. Pedido genérico gera “PowerPoint”. Copie e adapte:</p>
+    <div class="cmd prompt"><code id="p1">Use as skills do HyperFrames. Crie um vídeo de motion design de 30 segundos em 1920x1080 sobre [SEU TEMA].
+
+Estética: HUD tecnológico, verde fósforo #3BFF7A sobre fundo #020A05, grade sutil, scanlines, cantos de câmera e um contador de frames no rodapé.
+Tipografia: Archivo Black para títulos, JetBrains Mono para textos de interface.
+Movimento: GSAP com easing expo.out e power3, entradas rápidas, transições curtas com glitch, um título 3D com extrusão girando e partículas em canvas (determinísticas).
+
+Cenas:
+1. (0–5s) [gancho em texto grande]
+2. (5–12s) [cena 2]
+3. (12–20s) [cena 3]
+4. (20–26s) [cena 4]
+5. (26–30s) chamada final
+
+Antes de renderizar, rode lint e check, tire snapshots de cada cena, olhe e corrija o que estiver sobreposto ou cortado.</code><button class="copiar" data-alvo="p1">Copiar</button></div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>Ajustar e renderizar</h2>
+    <ol>
+      <li>Veja o vídeo no navegador (dá pra mexer na timeline):
+        <div class="cmd"><code>npx hyperframes preview</code><button class="copiar" data-texto="npx hyperframes preview">Copiar</button></div>
+      </li>
+      <li>Peça ajustes conversando: <b>“deixa mais rápido”</b>, <b>“muda a cor pra azul”</b>, <b>“faz o final voltar pro começo”</b>. Ele reescreve o código.</li>
+      <li>Gere o MP4 final:
+        <div class="cmd"><code>npx hyperframes render --quality high --output motion.mp4</code><button class="copiar" data-texto="npx hyperframes render --quality high --output motion.mp4">Copiar</button></div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">+</span>Bônus: voz e sons</h2>
+    <p style="margin:0">No meu vídeo, a narração, a trilha e os efeitos sonoros foram gerados na <b>ElevenLabs</b>. Crie uma conta, pegue a chave da API e peça ao Claude: <b>“gera a narração com a ElevenLabs, uma trilha eletrônica tensa e efeitos de glitch, digitação e impacto, e sincroniza as cenas com a fala”</b>.</p>
+  </section>
+
+  <section class="aviso">
+    <h2>Importante</h2>
+    <ul>
+      <li>O Claude Code precisa de plano pago do Claude. O HyperFrames é open source e gratuito.</li>
+      <li>A ElevenLabs tem plano gratuito com limite; voz clonada exige plano pago.</li>
+      <li>Vídeos longos e cheios de efeito demoram mais pra renderizar. Comece com 15–30 segundos.</li>
+    </ul>
+  </section>
+
+  <div class="fim">
+    IA e tecnologia todo dia<br>
+    <a href="https://www.instagram.com/raphaelbusquet/" target="_blank" rel="noopener">Seguir @raphaelbusquet</a>
+  </div>
+</main>
+<script>
+  document.querySelectorAll("button.copiar").forEach((b) => {
+    b.addEventListener("click", async () => {
+      const texto = b.dataset.texto ?? document.getElementById(b.dataset.alvo).textContent;
+      try { await navigator.clipboard.writeText(texto); } catch (e) {
+        const t = document.createElement("textarea"); t.value = texto; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove();
+      }
+      b.textContent = "Copiado!"; b.classList.add("ok");
+      setTimeout(() => { b.textContent = "Copiar"; b.classList.remove("ok"); }, 1600);
+    });
+  });
+</script>
+</body>
+</html>
