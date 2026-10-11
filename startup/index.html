@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude for Startups — passo a passo</title>
+<meta name="description" content="Como aplicar ao Claude for Startups da Anthropic: o que o programa oferece, quem pode entrar e o passo a passo.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%234340EE"/><path d="M16 6l2.6 6.2L25 13l-5 4.3 1.6 6.5L16 20.3 10.4 23.8 12 17.3 7 13l6.4-.8z" fill="%23fff"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; --bg:#06060E; --linha:#23264A; --texto:#ECEDF5; --fraco:#9DA5C0; --destaque:#4340EE; --acento:#6C69FF; --aviso:#E2622F; --ok:#3DDC97; }
+  * { box-sizing: border-box; }
+  body { margin:0; background: radial-gradient(900px 600px at 10% -10%, #1E2590 0%, transparent 60%), radial-gradient(800px 600px at 110% 110%, #0A3B30 0%, transparent 60%), var(--bg); background-attachment: fixed; color:var(--texto); font:16px/1.6 "Poppins", system-ui, sans-serif; }
+  main { max-width: 40rem; margin: 0 auto; padding: 48px 16px 64px; }
+  .tag { display:inline-block; font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--acento); margin-bottom:10px; }
+  h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); line-height:1.15; letter-spacing:-.02em; margin:0 0 10px; }
+  p.sub { color:var(--fraco); margin:0 0 30px; }
+  section { background: rgba(15,16,32,.85); border:1px solid var(--linha); border-radius:20px; padding: 24px 20px; margin-bottom: 20px; }
+  h2 { font-size:1.15rem; margin:0 0 16px; display:flex; align-items:center; gap:10px; }
+  h2 .n { display:inline-flex; width:30px; height:30px; border-radius:50%; background:var(--destaque); align-items:center; justify-content:center; font-size:.9rem; }
+  ol { margin:0; padding:0; list-style:none; counter-reset:passo; }
+  ol > li { counter-increment:passo; position:relative; padding-left:42px; margin-bottom:16px; }
+  ol > li::before { content:counter(passo); position:absolute; left:0; top:1px; width:28px; height:28px; border-radius:8px; background:rgba(67,64,238,.18); color:var(--acento); font-weight:700; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+  ul.lista { margin:0; padding-left:20px; } ul.lista li { margin-bottom:10px; }
+  b { color:#fff; } a { color: var(--acento); }
+  .status { border-color: rgba(226,98,47,.5); }
+  .status h2 { color:#fff; }
+  .ok { color: var(--ok); font-weight:600; } .pausa { color: #FF9C73; font-weight:600; }
+  .cta { display:block; text-align:center; margin-top:8px; background:var(--destaque); color:#fff; text-decoration:none; font-weight:600; padding:14px 22px; border-radius:14px; }
+  .dica { font-size:.9rem; color:var(--fraco); margin:10px 0 0; }
+  .fim { text-align:center; margin-top:36px; color:var(--fraco); }
+  .fim a { display:inline-block; margin-top:10px; background:var(--destaque); color:#fff; text-decoration:none; font-weight:600; padding:12px 22px; border-radius:14px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">Passo a passo</span>
+  <h1>Claude for Startups</h1>
+  <p class="sub">O programa da Anthropic pra startups e SaaS: créditos, descontos em ferramentas e acesso ao time de IA da própria Anthropic.</p>
+
+  <section class="status">
+    <h2>Antes de aplicar: status atual</h2>
+    <ul class="lista">
+      <li><span class="pausa">Lotado no momento:</span> o ano grátis do <b>Claude Team</b> (até 5 pessoas) e os <b>US$ 1.000 em créditos de API</b>. A Anthropic recebeu centenas de milhares de pedidos e está acima da capacidade nessas duas ofertas. Vale aplicar e acompanhar a página: pode reabrir.</li>
+      <li><span class="ok">Continua valendo:</span> o <b>Startup Stack</b> (até US$ 45 mil em descontos e créditos de empresas parceiras, como 12 meses grátis da ElevenLabs), office hours com o time de IA aplicada da Anthropic e eventos.</li>
+      <li><span class="ok">Se o teu investidor for parceiro da Anthropic:</span> até <b>US$ 100 mil em créditos de API</b>.</li>
+    </ul>
+    <p class="dica">Confira sempre a página oficial antes de aplicar. As condições mudam.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">1</span>Quem pode entrar</h2>
+    <ul class="lista">
+      <li>Startups e SaaS <b>sem investidor</b>, pré-seed ou com rodada.</li>
+      <li>Empresa fundada nos <b>últimos 5 anos</b>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Como aplicar</h2>
+    <ol>
+      <li>Abra a página oficial do programa:
+        <a class="cta" href="https://claude.com/programs/startups" target="_blank" rel="noopener">claude.com/programs/startups</a>
+      </li>
+      <li>Clique pra aplicar e preencha o formulário com os dados da tua empresa.</li>
+      <li>Se o teu investidor faz parte da rede de parceiros da Anthropic, informe isso na aplicação: é o que libera os créditos maiores.</li>
+      <li>Aguarde o e-mail. A Anthropic diz que analisa cada aplicação <b>em até uma semana</b>.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Depois de aprovado</h2>
+    <ul class="lista">
+      <li>Ative as ofertas do <b>Startup Stack</b> que fazem sentido pra tua empresa (ElevenLabs, ferramentas de dados, produtividade…).</li>
+      <li>Marque as <b>office hours</b> com o time de IA da Anthropic pra tirar dúvidas de como colocar o Claude no teu produto.</li>
+    </ul>
+  </section>
+
+  <div class="fim">
+    Mais conteúdo assim todo dia sobre IA e tecnologia<br>
+    <a href="https://www.instagram.com/raphaelbusquet/" target="_blank" rel="noopener">Seguir @raphaelbusquet</a>
+  </div>
+</main>
+</body>
+</html>
