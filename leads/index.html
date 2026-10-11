@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leads com o Claude — passo a passo</title>
+<meta name="description" content="Como conectar o Mailerfind ao Claude e gerar uma lista de leads a partir de um perfil do Instagram.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%234340EE"/><path d="M9 11h14M9 16h14M9 21h9" stroke="%23fff" stroke-width="2.6" stroke-linecap="round"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; --bg:#06060E; --card:#0F1020; --linha:#23264A; --texto:#ECEDF5; --fraco:#9DA5C0; --destaque:#4340EE; --acento:#6C69FF; --aviso:#E2622F; }
+  * { box-sizing: border-box; }
+  body { margin:0; background: radial-gradient(900px 600px at 10% -10%, #1E2590 0%, transparent 60%), radial-gradient(800px 600px at 110% 110%, #0A3B30 0%, transparent 60%), var(--bg); background-attachment: fixed; color:var(--texto); font:16px/1.6 "Poppins", system-ui, sans-serif; }
+  main { max-width: 40rem; margin: 0 auto; padding: 48px 16px 64px; }
+  .tag { display:inline-block; font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--acento); margin-bottom:10px; }
+  h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); line-height:1.15; letter-spacing:-.02em; margin:0 0 10px; }
+  p.sub { color:var(--fraco); margin:0 0 36px; }
+  section { background: rgba(15,16,32,.85); border:1px solid var(--linha); border-radius:20px; padding: 24px 20px; margin-bottom: 20px; }
+  h2 { font-size:1.15rem; margin:0 0 16px; display:flex; align-items:center; gap:10px; }
+  h2 .n { display:inline-flex; width:30px; height:30px; border-radius:50%; background:var(--destaque); align-items:center; justify-content:center; font-size:.9rem; }
+  ol { margin:0; padding:0; list-style:none; counter-reset:passo; }
+  ol > li { counter-increment:passo; position:relative; padding-left:42px; margin-bottom:16px; }
+  ol > li::before { content:counter(passo); position:absolute; left:0; top:1px; width:28px; height:28px; border-radius:8px; background:rgba(67,64,238,.18); color:var(--acento); font-weight:700; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+  b { color:#fff; }
+  .campo { margin-top:10px; background:#08091A; border:1px solid var(--linha); border-radius:12px; padding:10px 12px; display:flex; gap:10px; align-items:center; justify-content:space-between; }
+  .campo .rot { font-size:.75rem; color:var(--fraco); display:block; }
+  .campo code { font-family: ui-monospace, Menlo, monospace; font-size:.92rem; color:#fff; word-break: break-all; }
+  .prompt code { font-family: inherit; font-size:.95rem; word-break: normal; overflow-wrap: anywhere; }
+  button.copiar { flex-shrink:0; border:0; border-radius:10px; background:var(--destaque); color:#fff; font:600 .85rem "Poppins", sans-serif; padding:8px 12px; cursor:pointer; }
+  button.copiar.ok { background:#1f9d6b; }
+  .aviso { border-color: rgba(226,98,47,.45); }
+  .aviso h2 { color:#fff; }
+  .aviso ul { margin:0; padding-left:20px; color:var(--texto); }
+  .aviso li { margin-bottom:8px; }
+  .fim { text-align:center; margin-top:36px; color:var(--fraco); }
+  .fim a { display:inline-block; margin-top:10px; background:var(--destaque); color:#fff; text-decoration:none; font-weight:600; padding:12px 22px; border-radius:14px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">Passo a passo</span>
+  <h1>Leads com o Claude</h1>
+  <p class="sub">Conecte o Mailerfind ao Claude e transforme os seguidores de um perfil do seu nicho numa lista de leads.</p>
+
+  <section>
+    <h2><span class="n">1</span>Conectar</h2>
+    <ol>
+      <li>Crie sua conta no <b>Mailerfind</b> (<a href="https://mailerfind.com" target="_blank" rel="noopener" style="color:var(--acento)">mailerfind.com</a>). É por ele que o Claude acessa os seguidores do Instagram.</li>
+      <li>Abra o <b>Claude</b> (site ou app, funciona no plano grátis) e vá em <b>Configurações &gt; Conectores</b>.</li>
+      <li>Clique em <b>“Adicionar conector personalizado”</b> (Add custom connector).</li>
+      <li>Preencha:
+        <div class="campo"><div><span class="rot">Nome</span><code>Mailerfind</code></div><button class="copiar" data-texto="Mailerfind">Copiar</button></div>
+        <div class="campo"><div><span class="rot">URL</span><code>https://mcp.mailerfind.com/mcp</code></div><button class="copiar" data-texto="https://mcp.mailerfind.com/mcp">Copiar</button></div>
+      </li>
+      <li>Clique em <b>Continuar</b>. Em Autenticação, deixe marcado <b>“Sign in now”</b> e clique em <b>Adicionar</b>.</li>
+      <li>Vai abrir a tela do Mailerfind: faça login e clique em <b>Autorizar</b>.</li>
+    </ol>
+    <p style="margin:4px 0 0;color:var(--fraco)">Pronto! O Mailerfind aparece na sua lista de conectores.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Como usar</h2>
+    <ol>
+      <li>Escolha um perfil grande do seu nicho e copie o <b>@</b> dele.</li>
+      <li>Cole no Claude, trocando o @PERFIL:
+        <div class="campo prompt"><code id="p1">Analise os seguidores do @PERFIL e me dê uma lista completa com leads qualificados. Organize em uma planilha.</code><button class="copiar" data-alvo="p1">Copiar</button></div>
+      </li>
+      <li>Quer filtrar? Mande em seguida, por exemplo:
+        <div class="campo prompt"><code id="p2">Sou [sua profissão] em [sua cidade]. Filtre apenas pessoas dessa região e que tenham perfil de cliente para o meu serviço.</code><button class="copiar" data-alvo="p2">Copiar</button></div>
+      </li>
+      <li>A lista sai com nome, @ e, quando disponíveis, e-mail e telefone. Dá para exportar para planilha ou para o seu gerenciador de e-mails.</li>
+    </ol>
+  </section>
+
+  <section class="aviso">
+    <h2>Importante</h2>
+    <ul>
+      <li>A análise de seguidores precisa de um <b>plano ativo no Mailerfind</b>.</li>
+      <li>O Instagram não informa a idade, e a cidade é estimada pela bio e pelo perfil.</li>
+      <li>Use os contatos com responsabilidade (<b>LGPD</b>): ofereça valor e respeite quem pedir para sair.</li>
+    </ul>
+  </section>
+
+  <div class="fim">
+    Mais conteúdo assim todo dia sobre IA e tecnologia<br>
+    <a href="https://www.instagram.com/raphaelbusquet/" target="_blank" rel="noopener">Seguir @raphaelbusquet</a>
+  </div>
+</main>
+<script>
+  document.querySelectorAll("button.copiar").forEach((b) => {
+    b.addEventListener("click", async () => {
+      const texto = b.dataset.texto ?? document.getElementById(b.dataset.alvo).textContent;
+      try { await navigator.clipboard.writeText(texto); } catch (e) {
+        const t = document.createElement("textarea"); t.value = texto; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove();
+      }
+      b.textContent = "Copiado!"; b.classList.add("ok");
+      setTimeout(() => { b.textContent = "Copiar"; b.classList.remove("ok"); }, 1600);
+    });
+  });
+</script>
+</body>
+</html>
