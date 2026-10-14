@@ -9,6 +9,7 @@
 <meta property="og:description" content="Canal no YouTube, meu setup, newsletter e ebook.">
 <meta property="og:image" content="https://raphaelbusquet.github.io/links/img/foto.jpg">
 <meta name="theme-color" content="#000000">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="img/foto.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -166,7 +167,9 @@
   // Carrega o player só no toque: a página abre rápido mesmo no 4G.
   document.querySelector('#video button').addEventListener('click', function () {
     const f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/_amsgsVau0E?autoplay=1&playsinline=1';
+    f.src = 'https://www.youtube.com/embed/_amsgsVau0E?autoplay=1&playsinline=1&origin=' + encodeURIComponent(location.origin);
+    // Sem Referer o YouTube recusa o player (erro 153).
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
     f.title = 'A mentalidade que me ajudou a realizar boa parte dos meus objetivos';
     f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
     f.allowFullscreen = true;
