@@ -3,87 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Criar um bot com o Grok — passo a passo</title>
-<meta name="description" content="Como baixar o Grok Build, o app da xAI, e criar o teu bot lá dentro só descrevendo o que você quer.">
-<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%234340EE"/><path d="M16 6l2.6 6.2L25 13l-5 4.3 1.6 6.5L16 20.3 10.4 23.8 12 17.3 7 13l6.4-.8z" fill="%23fff"/></svg>'>
+<title>Criar um bot com o Grok Bot — passo a passo</title>
+<meta name="description" content="Como baixar o Grok Bot, o app da xAI, e criar o teu primeiro bot lá dentro.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%23111"/><circle cx="16" cy="16" r="7" fill="%23fff"/></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: dark; --bg:#06060E; --linha:#23264A; --texto:#ECEDF5; --fraco:#9DA5C0; --destaque:#4340EE; --acento:#6C69FF; --aviso:#E2622F; --ok:#3DDC97; }
+  :root { color-scheme: light; --bg:#F4F4F2; --cartao:#FFFFFF; --linha:#E4E4E0; --texto:#111111; --fraco:#6B6B66; --suave:#EDEDEA; --preto:#111111; }
   * { box-sizing: border-box; }
-  body { margin:0; background: radial-gradient(900px 600px at 10% -10%, #1E2590 0%, transparent 60%), radial-gradient(800px 600px at 110% 110%, #0A3B30 0%, transparent 60%), var(--bg); background-attachment: fixed; color:var(--texto); font:16px/1.6 "Poppins", system-ui, sans-serif; }
-  main { max-width: 40rem; margin: 0 auto; padding: 48px 16px 64px; }
-  .tag { display:inline-block; font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--acento); margin-bottom:10px; }
-  h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); line-height:1.15; letter-spacing:-.02em; margin:0 0 10px; }
-  p.sub { color:var(--fraco); margin:0 0 30px; }
-  section { background: rgba(15,16,32,.85); border:1px solid var(--linha); border-radius:20px; padding: 24px 20px; margin-bottom: 20px; }
-  h2 { font-size:1.15rem; margin:0 0 16px; display:flex; align-items:center; gap:10px; }
-  h2 .n { display:inline-flex; width:30px; height:30px; border-radius:50%; background:var(--destaque); align-items:center; justify-content:center; font-size:.9rem; }
+  body { margin:0; background:var(--bg); color:var(--texto); font:16px/1.6 "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 38rem; margin: 0 auto; padding: 56px 16px 64px; }
+  .tag { display:inline-block; font-size:.75rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--fraco); margin-bottom:12px; }
+  h1 { font-size: clamp(1.9rem, 6vw, 2.5rem); line-height:1.1; letter-spacing:-.03em; margin:0 0 12px; font-weight:700; }
+  p.sub { color:var(--fraco); margin:0 0 32px; font-size:1.05rem; }
+  section { background:var(--cartao); border:1px solid var(--linha); border-radius:18px; padding: 24px 22px; margin-bottom: 16px; }
+  h2 { font-size:1.1rem; margin:0 0 16px; display:flex; align-items:center; gap:12px; font-weight:600; letter-spacing:-.01em; }
+  h2 .n { display:inline-flex; width:28px; height:28px; border-radius:50%; background:var(--preto); color:#fff; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
   ol { margin:0; padding:0; list-style:none; counter-reset:passo; }
-  ol > li { counter-increment:passo; position:relative; padding-left:42px; margin-bottom:16px; }
-  ol > li::before { content:counter(passo); position:absolute; left:0; top:1px; width:28px; height:28px; border-radius:8px; background:rgba(67,64,238,.18); color:var(--acento); font-weight:700; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
-  ul.lista { margin:0; padding-left:20px; } ul.lista li { margin-bottom:10px; }
-  b { color:#fff; } a { color: var(--acento); }
-  .status { border-color: rgba(226,98,47,.5); }
-  .status h2 { color:#fff; }
-  .ok { color: var(--ok); font-weight:600; } .pausa { color: #FF9C73; font-weight:600; }
-  .cta { display:block; text-align:center; margin-top:8px; background:var(--destaque); color:#fff; text-decoration:none; font-weight:600; padding:14px 22px; border-radius:14px; }
-  .dica { font-size:.9rem; color:var(--fraco); margin:10px 0 0; }
-  .fim { text-align:center; margin-top:36px; color:var(--fraco); }
-  .fim a { display:inline-block; margin-top:10px; background:var(--destaque); color:#fff; text-decoration:none; font-weight:600; padding:12px 22px; border-radius:14px; }
-  pre { background:#0B0C1A; border:1px solid var(--linha); border-radius:12px; padding:12px 14px; overflow-x:auto; font-size:.85rem; margin:10px 0 0; white-space:pre-wrap; word-break:break-all; }
-  .so { font-size:.8rem; color:var(--fraco); margin:12px 0 0; }
+  ol > li { counter-increment:passo; position:relative; padding-left:38px; margin-bottom:14px; }
+  ol > li:last-child { margin-bottom:0; }
+  ol > li::before { content:counter(passo); position:absolute; left:0; top:1px; width:26px; height:26px; border-radius:8px; background:var(--suave); color:var(--fraco); font-weight:600; font-size:.8rem; display:flex; align-items:center; justify-content:center; }
+  b { color:var(--texto); font-weight:600; }
+  .cta { display:block; text-align:center; margin-top:18px; background:var(--preto); color:#fff; text-decoration:none; font-weight:600; padding:14px 22px; border-radius:999px; }
+  .cta:hover { background:#333; }
+  .exemplo { background:var(--suave); border-radius:12px; padding:12px 14px; margin:10px 0 0; font-size:.95rem; color:#333; }
+  .dica { font-size:.9rem; color:var(--fraco); margin:14px 0 0; }
+  .fim { text-align:center; margin-top:40px; color:var(--fraco); }
+  .fim a { display:inline-block; margin-top:12px; background:var(--cartao); border:1px solid var(--linha); color:var(--texto); text-decoration:none; font-weight:600; padding:12px 22px; border-radius:999px; }
 </style>
 </head>
 <body>
 <main>
   <span class="tag">Passo a passo</span>
-  <h1>Crie teu bot com o Grok</h1>
-  <p class="sub">Baixe o Grok Build, o app da xAI (dona do X), e peça o bot em português. Ele cria tudo pra você.</p>
+  <h1>Crie teu bot com o Grok Bot</h1>
+  <p class="sub">O app da xAI (dona do X) onde você cria bots que fazem o trabalho por você. Sem programar.</p>
 
   <section>
-    <h2><span class="n">1</span>Baixe o Grok Build</h2>
+    <h2><span class="n">1</span>Baixe o app</h2>
     <ol>
-      <li>Abra o <b>Terminal</b> (Mac) ou o <b>PowerShell</b> (Windows).</li>
-      <li>Cole o comando do teu sistema e aperte Enter:
-        <p class="so">Mac ou Linux</p>
-        <pre>curl -fsSL https://x.ai/cli/install.sh | bash</pre>
-        <p class="so">Windows (PowerShell)</p>
-        <pre>irm https://x.ai/cli/install.ps1 | iex</pre>
+      <li>Abra a página oficial do Grok Bot no navegador.</li>
+      <li>Clique em <b>Download for macOS</b>. Se o teu Mac for Intel, use <b>More downloads</b>.</li>
+      <li>Abra o arquivo baixado e arraste o Grok Bot para a pasta <b>Aplicativos</b>.</li>
+    </ol>
+    <a class="cta" href="https://x.ai/bot" target="_blank" rel="noopener">Abrir x.ai/bot</a>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Entre na tua conta</h2>
+    <ol>
+      <li>Abra o Grok Bot e faça login.</li>
+      <li>Você precisa de um plano <b>SuperGrok</b> (ou Cursor Pro). O app está em beta e só libera para esses planos.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Crie o teu bot</h2>
+    <ol>
+      <li>Clique no <b>+</b> no topo da lista de bots.</li>
+      <li>Escreva, como se falasse com um colega, o trabalho que ele vai fazer. Por exemplo:
+        <p class="exemplo">Todo dia de manhã, lê meu e-mail, separa o que é urgente e me manda um resumo.</p>
       </li>
-      <li>Quando terminar, feche e abra o terminal de novo.</li>
+      <li>Se ele precisar entrar em alguma ferramenta (Gmail, planilha, site), ele te pede para fazer o login.</li>
     </ol>
-    <a class="cta" href="https://x.ai/cli" target="_blank" rel="noopener">Página oficial do Grok Build</a>
   </section>
 
   <section>
-    <h2><span class="n">2</span>Abra e entre na tua conta</h2>
+    <h2><span class="n">4</span>Ajuste conversando</h2>
     <ol>
-      <li>Crie uma pasta pro teu bot e abra o terminal nela.</li>
-      <li>Digite <b>grok</b> e aperte Enter. O app abre em tela cheia.</li>
-      <li>Entre com a tua conta do Grok / X quando ele pedir.</li>
+      <li>Acompanhe o que ele faz e corrija no chat: <b>"resume em 3 linhas"</b>, <b>"ignora newsletter"</b>.</li>
+      <li>Pode criar vários bots, um para cada tarefa.</li>
     </ol>
-  </section>
-
-  <section>
-    <h2><span class="n">3</span>Peça o bot</h2>
-    <ol>
-      <li>Escreva o que você quer, do teu jeito. Por exemplo:
-        <pre>Cria um bot de Telegram que responde dúvidas da minha loja em português, com tom simpático. Me explica passo a passo o que eu preciso configurar.</pre>
-      </li>
-      <li>O Grok cria os arquivos e te mostra o que fez. Quando ele pedir permissão pra rodar algo, leia e aprove.</li>
-      <li>Se precisar de alguma chave (como o token do Telegram), ele te diz onde pegar.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2><span class="n">4</span>Teste e ajuste</h2>
-    <ul class="lista">
-      <li>Peça pra ele rodar o bot e mande uma mensagem pra testar.</li>
-      <li>Quer mudar algo? Só pedir: <b>"deixa as respostas mais curtas"</b>, <b>"responde também em inglês"</b>.</li>
-    </ul>
-    <p class="dica">O quanto você pode usar depende do teu plano do Grok.</p>
+    <p class="dica">Também dá para falar com os teus bots pelo app do Grok no iPhone.</p>
   </section>
 
   <div class="fim">
