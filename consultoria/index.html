@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raphael Busquet — Consultoria de IA</title>
+<meta name="description" content="Consultoria de IA e tecnologia para empresas: diagnóstico, automações com IA, agentes e treinamento de equipes. Do esboço ao sistema funcionando, com Raphael Busquet.">
+<!-- Prévia: fica fora do Google até ir para o domínio próprio. -->
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Raphael Busquet — Consultoria de IA">
+<meta property="og:description" content="Código é arte. Coloco a IA para trabalhar na sua empresa.">
+<meta property="og:image" content="maos.webp">
+<link rel="icon" href="../links/img/foto.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("tema"); if (t) document.documentElement.dataset.tema = t; } catch (e) {}</script>
+<style>
+  /* "Código é arte": afrescos de Michelangelo em colagem estilo Vox (papel, retícula, recorte, marca-texto, anotação à mão)
+     cruzados com o terminal. Escuro por padrão (papel escuro), versão clara em pergaminho.
+     Layout: abertura em colagem (texto | afresco + retrato recortado + terminal), depois "capítulos" em papel. */
+  :root {
+    --papel:#14120F; --papel-2:#1C1915; --papel-3:#24201B; --linha:#38322A; --tinta:#EFE6D4; --fraco:#A89D8A; --suave:#D3C8B4;
+    --verde:#1FBF8F; --verde-texto:#35D6A3; --sobre-verde:#06140F; --sanguinea:#D0703F; --marca:rgba(31,191,143,.32);
+    --vermelho:#FF5F57; --amarelo:#FEBC2E; --ok:#28C840; --confirmar:#FFE58A; --sobre-confirmar:#3A2E00;
+    --topo-bg:rgba(20,18,15,.82); --sombra:rgba(0,0,0,.55); --borda-recorte:#EFE6D4; --grao:.10;
+    --display:"Instrument Serif", "Iowan Old Style", Georgia, serif; --corpo:"IBM Plex Sans", system-ui, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace; --mao:"Caveat", "Bradley Hand", cursive;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light) { :root:not([data-tema="escuro"]) {
+    --papel:#EFE7D8; --papel-2:#E6DCC8; --papel-3:#DCD0B8; --linha:#CBBDA2; --tinta:#1A1610; --fraco:#6B5F4C; --suave:#3A3226;
+    --verde-texto:#0B7D59; --sanguinea:#A4461C; --marca:rgba(31,191,143,.30); --topo-bg:rgba(239,231,216,.86); --sombra:rgba(60,40,10,.22);
+    --borda-recorte:#FFFDF7; --grao:.16; color-scheme:light;
+  } }
+  :root[data-tema="claro"] {
+    --papel:#EFE7D8; --papel-2:#E6DCC8; --papel-3:#DCD0B8; --linha:#CBBDA2; --tinta:#1A1610; --fraco:#6B5F4C; --suave:#3A3226;
+    --verde-texto:#0B7D59; --sanguinea:#A4461C; --marca:rgba(31,191,143,.30); --topo-bg:rgba(239,231,216,.86); --sombra:rgba(60,40,10,.22);
+    --borda-recorte:#FFFDF7; --grao:.16; color-scheme:light;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--papel); color:var(--tinta); font:17px/1.62 var(--corpo); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  /* Grão de papel sobre tudo. */
+  body::after { content:""; position:fixed; inset:0; pointer-events:none; z-index:50; opacity:var(--grao); mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .45 0 0 0 0 .4 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  a { color:inherit; }
+  img { max-width:100%; height:auto; }
+  .wrap { max-width:1180px; margin:0 auto; padding-left:max(20px, env(safe-area-inset-left, 0px)); padding-right:max(20px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family:var(--display); font-weight:400; text-wrap:balance; }
+  em { font-style:italic; }
+  :focus-visible { outline:2px solid var(--verde); outline-offset:3px; border-radius:4px; }
+  /* Marca-texto do Vox: faixa verde torta atrás da palavra. */
+  .marcado { background:linear-gradient(100deg, transparent 2%, var(--marca) 4%, var(--marca) 94%, transparent 97%) 0 62% / 100% 46% no-repeat; padding:0 .08em; }
+  .mono { font-family:var(--mono); }
+  .rotulo { font:500 13px/1.3 var(--mono); color:var(--verde-texto); letter-spacing:.02em; }
+  .rotulo::before { content:"// "; color:var(--fraco); }
+  .anot { font:600 24px/1.1 var(--mao); color:var(--sanguinea); }
+  mark.confirmar { background:var(--confirmar); color:var(--sobre-confirmar); padding:0 .3em; border-radius:3px; font-weight:600; }
+  /* Retícula (halftone) sobre os afrescos. */
+  .reticula { position:relative; isolation:isolate; }
+  .reticula::after { content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:multiply; opacity:.22;
+    background:radial-gradient(circle, #000 1px, transparent 1.3px) 0 0 / 5px 5px; }
+
+  /* Topo */
+  body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:30; background:var(--papel); }
+  header { position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; backdrop-filter:blur(12px); background:var(--topo-bg); border-bottom:1px solid var(--linha); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; gap:16px; height:64px; }
+  .nome { font:400 26px/1 var(--display); text-decoration:none; letter-spacing:-.01em; }
+  .nome .cursor { font:500 18px/1 var(--mono); color:var(--verde-texto); margin-left:4px; animation:pisca 1.1s steps(1) infinite; }
+  @keyframes pisca { 50% { opacity:0; } }
+  nav.menu { display:flex; align-items:center; gap:24px; font:500 14px/1 var(--mono); color:var(--fraco); }
+  nav.menu a { text-decoration:none; transition:color .15s; }
+  nav.menu a:hover { color:var(--tinta); }
+  .botao { display:inline-flex; align-items:center; justify-content:center; gap:10px; border:0; cursor:pointer; text-decoration:none;
+    font:600 15px/1 var(--corpo); color:var(--sobre-verde); background:var(--verde); padding:15px 22px; border-radius:6px;
+    box-shadow:3px 3px 0 var(--tinta); transition:transform .12s, box-shadow .12s; }
+  .botao:hover { transform:translate(-1px, -1px); box-shadow:5px 5px 0 var(--tinta); }
+  .botao:active { transform:translate(2px, 2px); box-shadow:1px 1px 0 var(--tinta); }
+  .botao.linha { background:transparent; color:var(--tinta); box-shadow:none; border:1px solid var(--linha); font-family:var(--mono); font-weight:500; font-size:14px; }
+  .botao.linha:hover { border-color:var(--tinta); }
+  nav.menu .botao { padding:11px 15px; font-size:14px; }
+  .tema { width:36px; height:36px; display:grid; place-items:center; border-radius:6px; border:1px solid var(--linha); background:transparent; color:var(--fraco); cursor:pointer; font-size:16px; }
+  .tema:hover { color:var(--tinta); }
+
+  /* Abertura */
+  .abertura { display:grid; grid-template-columns:1fr 1.05fr; gap:56px; align-items:center; padding-block:72px 96px; }
+  h1 { font-size:clamp(50px, 6.6vw, 96px); line-height:.95; letter-spacing:-.02em; margin:18px 0 24px; }
+  h1 em { color:var(--verde-texto); }
+  .lead { font-size:19px; color:var(--suave); max-width:540px; }
+  .acoes { margin-top:34px; display:flex; gap:14px; flex-wrap:wrap; }
+  .provas { margin-top:36px; display:flex; flex-wrap:wrap; gap:8px 22px; font:500 14px/1.4 var(--mono); color:var(--fraco); list-style:none; }
+  .provas li::before { content:"✓ "; color:var(--verde-texto); }
+
+  .colagem { position:relative; min-width:0; aspect-ratio:1 / 1.02; }
+  .afresco { position:absolute; inset:0 0 18% 0; overflow:hidden; border-radius:4px; box-shadow:0 30px 70px var(--sombra);
+    clip-path:polygon(0 2%, 7% 0, 18% 1.5%, 31% 0, 46% 1%, 60% 0, 74% 1.6%, 88% .3%, 100% 1.2%, 99.2% 26%, 100% 52%, 99% 78%, 100% 98%, 84% 100%, 66% 98.6%, 49% 100%, 33% 98.8%, 15% 100%, 0 98.5%, .8% 72%, 0 47%, .9% 22%); }
+  .afresco img { width:100%; height:100%; object-fit:cover; object-position:49% 50%; display:block; filter:saturate(.9) contrast(1.05); }
+  /* A faísca entre os dedos é um cursor de terminal. */
+  .faisca { position:absolute; left:38%; top:38.3%; transform:translate(-50%, -50%); z-index:2; font:500 22px/1 var(--mono); color:#06140F;
+    background:var(--verde); padding:4px 7px 5px; border-radius:3px; box-shadow:0 0 0 6px rgba(31,191,143,.25), 0 0 40px 8px rgba(31,191,143,.65); }
+  .faisca span { animation:pisca 1.1s steps(1) infinite; }
+  .colagem .anot { position:absolute; z-index:3; left:6%; top:5%; transform:rotate(-4deg); color:#3B2412; text-shadow:0 1px 0 rgba(255,250,240,.6); }
+  .eu { position:absolute; right:0; bottom:0; width:46%; z-index:3; filter:drop-shadow(0 0 0 var(--borda-recorte)) drop-shadow(3px 0 0 var(--borda-recorte)) drop-shadow(-3px 0 0 var(--borda-recorte)) drop-shadow(0 -3px 0 var(--borda-recorte)) drop-shadow(0 18px 30px var(--sombra)); }
+  .eu img { width:100%; display:block; }
+
+  .terminal { position:absolute; left:-4%; bottom:2%; z-index:4; width:min(360px, 70%); background:#0D0F0E; color:#D7DED9; border:1px solid #2A2F2C;
+    border-radius:10px; box-shadow:0 24px 60px var(--sombra); overflow:hidden; font:12.5px/1.65 var(--mono); transform:rotate(-1.2deg); }
+  .terminal .barra { display:flex; align-items:center; gap:7px; padding:9px 12px; background:#161917; border-bottom:1px solid #2A2F2C; }
+  .terminal .barra i { width:11px; height:11px; border-radius:50%; display:block; }
+  .terminal .barra i:nth-child(1) { background:var(--vermelho); } .terminal .barra i:nth-child(2) { background:var(--amarelo); } .terminal .barra i:nth-child(3) { background:var(--ok); }
+  .terminal .barra span { margin-left:8px; color:#7E8882; font-size:12px; }
+  .terminal ol { list-style:none; padding:10px 14px 12px; min-height:134px; }
+  .terminal li { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .terminal .h { color:#7E8882; } .terminal .ok { color:#3FE0A8; }
+  .terminal li.nova { animation:entra .35s ease-out; }
+  @keyframes entra { from { opacity:.2; transform:translateY(4px); } }
+
+  /* Manifesto */
+  .manifesto { position:relative; padding-block:110px; background:var(--papel-2); border-block:1px solid var(--linha); overflow:hidden; }
+  .manifesto .wrap > * { min-width:0; }
+  .manifesto .wrap { display:grid; grid-template-columns:.85fr 1.15fr; gap:64px; align-items:center; }
+  .sibila { position:relative; transform:rotate(-2.5deg); background:var(--borda-recorte); padding:12px 12px 46px; box-shadow:0 26px 60px var(--sombra); max-width:440px; }
+  .sibila img { width:100%; display:block; }
+  .sibila figcaption { position:absolute; left:16px; right:16px; bottom:12px; font:500 12px/1.3 var(--mono); color:#5A4E3C; }
+  .manifesto h2 { font-size:clamp(56px, 8vw, 120px); line-height:.9; letter-spacing:-.02em; }
+  .manifesto h2 em { color:var(--verde-texto); }
+  .manifesto p { margin-top:22px; font-size:20px; color:var(--suave); max-width:600px; }
+  .codigo { margin-top:28px; font:14px/1.75 var(--mono); color:var(--fraco); padding:18px 20px; border-left:2px solid var(--verde); background:var(--papel-3); overflow-x:auto; }
+  .codigo b { color:var(--verde-texto); font-weight:500; } .codigo i { color:var(--sanguinea); font-style:normal; }
+
+  /* Seções */
+  section { padding-block:104px; }
+  h2 { font-size:clamp(40px, 5vw, 68px); line-height:1; letter-spacing:-.015em; margin:14px 0 18px; max-width:820px; }
+  h2 em { color:var(--verde-texto); }
+  .intro { color:var(--suave); font-size:19px; max-width:640px; }
+
+  .dores { margin-top:48px; display:grid; grid-template-columns:repeat(2, 1fr); gap:18px; list-style:none; }
+  .dores li { padding:26px 28px; background:var(--papel-2); border:1px solid var(--linha); font-size:17px; color:var(--suave); position:relative; }
+  .dores li:nth-child(odd) { transform:rotate(-.4deg); } .dores li:nth-child(even) { transform:rotate(.5deg); }
+  .dores li b { display:block; color:var(--tinta); font:400 30px/1.05 var(--display); margin-bottom:10px; }
+
+  .servicos { margin-top:52px; display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+  .servico { min-width:0; padding:30px; border:1px solid var(--linha); background:var(--papel-2); display:flex; flex-direction:column; gap:12px; position:relative; }
+  .servico.destaque { border:2px solid var(--verde); box-shadow:6px 6px 0 var(--verde); }
+  .servico .fn { font:500 14px/1 var(--mono); color:var(--verde-texto); }
+  .servico .fn span { color:var(--fraco); }
+  .servico .etiqueta { position:absolute; top:-14px; right:18px; font:600 22px/1 var(--mao); color:var(--sobre-verde); background:var(--verde); padding:6px 12px 7px; transform:rotate(2deg); }
+  .servico h3 { font-size:38px; line-height:1; }
+  .servico p { color:var(--suave); }
+  .servico ul { list-style:none; display:grid; gap:6px; margin-top:4px; font-size:16px; color:var(--suave); }
+  .servico li::before { content:"→ "; color:var(--verde-texto); font-family:var(--mono); }
+  .servico .prazo { margin-top:auto; padding-top:12px; border-top:1px dashed var(--linha); font:500 13px/1.4 var(--mono); color:var(--fraco); }
+
+  .casos { margin-top:52px; display:grid; gap:22px; }
+  .caso { display:grid; grid-template-columns:280px 1fr; gap:36px; padding:32px; background:var(--papel-2); border:1px solid var(--linha); }
+  .caso .arquivo { font:500 13px/1.4 var(--mono); color:var(--fraco); }
+  .caso h3 { font-size:38px; line-height:1; margin-top:10px; }
+  .caso .tipo { margin-top:12px; font:600 22px/1.1 var(--mao); color:var(--sanguinea); }
+  .caso dl { display:grid; grid-template-columns:110px 1fr; gap:12px 20px; min-width:0; }
+  .caso dt { font:500 13px/1.7 var(--mono); color:var(--verde-texto); }
+  .caso dd { color:var(--suave); }
+  .nota { margin-top:22px; font:500 14px/1.5 var(--mono); color:var(--fraco); }
+
+  /* Processo de Michelangelo: esboço → cartão → afresco. */
+  .processo { display:grid; grid-template-columns:.8fr 1.2fr; gap:56px; align-items:start; margin-top:52px; }
+  .estudo { position:relative; background:#EDE3CF; padding:10px; transform:rotate(1.5deg); box-shadow:0 26px 60px var(--sombra); }
+  .estudo img { width:100%; display:block; mix-blend-mode:multiply; }
+  .estudo .anot { position:absolute; right:-10px; bottom:18%; background:#EDE3CF; padding:2px 10px; color:#8A3A16; transform:rotate(-6deg); box-shadow:0 6px 16px rgba(0,0,0,.2); }
+  .passos { list-style:none; display:grid; gap:18px; counter-reset:p; }
+  .passos li { counter-increment:p; display:grid; grid-template-columns:76px 1fr; gap:20px; padding:24px 0; border-bottom:1px solid var(--linha); }
+  .passos li::before { content:counter(p, upper-roman); font:400 64px/.9 var(--display); color:var(--verde-texto); }
+  .passos .etapa { font:500 13px/1.3 var(--mono); color:var(--fraco); }
+  .passos h3 { font-size:36px; line-height:1.05; margin:6px 0 8px; }
+  .passos p { color:var(--suave); }
+
+  .sobre { display:grid; grid-template-columns:.8fr 1.2fr; gap:64px; align-items:center; }
+  .retrato { position:relative; aspect-ratio:1; background:var(--papel-3); overflow:hidden; border:1px solid var(--linha); }
+  .retrato::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 70%, rgba(31,191,143,.55), transparent 65%); }
+  .retrato img { position:absolute; bottom:0; left:50%; width:94%; transform:translateX(-50%); }
+  .retrato .anot { position:absolute; left:14px; top:12px; transform:rotate(-5deg); }
+  .sobre p { color:var(--suave); font-size:18px; margin-top:16px; max-width:620px; }
+  .stack { margin-top:26px; display:flex; flex-wrap:wrap; gap:8px; list-style:none; }
+  .stack li { font:500 13px/1 var(--mono); padding:9px 12px; border:1px solid var(--linha); color:var(--suave); background:var(--papel-2); }
+
+  .perguntas { margin-top:44px; display:grid; gap:12px; max-width:860px; }
+  details { border:1px solid var(--linha); background:var(--papel-2); }
+  summary { cursor:pointer; list-style:none; padding:20px 24px; font:400 27px/1.15 var(--display); display:flex; justify-content:space-between; gap:16px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"+"; font-family:var(--mono); color:var(--verde-texto); font-size:22px; }
+  details[open] summary::after { content:"−"; }
+  details p { padding:0 24px 22px; color:var(--suave); }
+
+  /* Contato */
+  .contato { display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:start; }
+  .contato .lista { margin-top:24px; list-style:none; display:grid; gap:8px; font:500 15px/1.5 var(--mono); color:var(--suave); }
+  .contato .lista li::before { content:"✓ "; color:var(--verde-texto); }
+  form.pedido { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:28px; background:var(--papel-2); border:1px solid var(--linha); box-shadow:8px 8px 0 var(--verde); }
+  form.pedido .cab { grid-column:1 / -1; font:500 13px/1 var(--mono); color:var(--fraco); padding-bottom:10px; border-bottom:1px dashed var(--linha); }
+  .campo { display:grid; gap:7px; min-width:0; }
+  .campo.cheio { grid-column:1 / -1; }
+  label { font:500 13px/1.2 var(--mono); color:var(--suave); }
+  label small { color:var(--fraco); }
+  input, select, textarea { width:100%; font:16px/1.4 var(--corpo); color:var(--tinta); background:var(--papel); border:1px solid var(--linha); border-radius:4px; padding:13px 14px; }
+  textarea { min-height:120px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:0; border-color:var(--verde); box-shadow:0 0 0 3px var(--marca); }
+  .escondido { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  form.pedido .botao { grid-column:1 / -1; padding-block:17px; font-size:16px; }
+  form.pedido .botao:disabled { opacity:.6; cursor:wait; }
+  .aviso { grid-column:1 / -1; font:500 14px/1.5 var(--mono); min-height:22px; color:var(--fraco); }
+  .aviso.ok { color:var(--verde-texto); } .aviso.erro { color:var(--vermelho); }
+
+  footer { border-top:1px solid var(--linha); padding-block:40px 56px; color:var(--fraco); font:500 13px/1.5 var(--mono); }
+  footer .wrap { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+  .creditos { flex-basis:100%; font-size:12px; opacity:.8; }
+  .redes { display:flex; flex-wrap:wrap; gap:4px; }
+  .redes a { width:40px; height:40px; display:grid; place-items:center; border-radius:6px; color:var(--fraco); transition:color .15s; }
+  .redes a:hover { color:var(--tinta); }
+  .redes svg { width:19px; height:19px; fill:currentColor; }
+
+  @media (max-width:980px) {
+    .abertura, .sobre, .contato, .manifesto .wrap, .processo { grid-template-columns:1fr; }
+    .abertura { padding-block:40px 72px; gap:36px; }
+    .colagem { max-width:620px; }
+    .servicos, .dores { grid-template-columns:1fr; }
+    .caso { grid-template-columns:1fr; gap:18px; }
+    nav.menu a:not(.botao) { display:none; }
+    .sibila { max-width:340px; }
+    .estudo { max-width:420px; }
+    .retrato { max-width:360px; }
+  }
+  @media (max-width:560px) {
+    section, .manifesto { padding-block:76px; }
+    .caso dl { grid-template-columns:1fr; gap:2px; } .caso dd { margin-bottom:12px; }
+    form.pedido { grid-template-columns:1fr; padding:20px; }
+    nav.menu .botao { display:none; }
+    .lead { font-size:18px; }
+    .faisca { font-size:16px; }
+    .colagem .anot { font-size:19px; }
+    .terminal { font-size:11.5px; width:72%; left:0; }
+    .passos li { grid-template-columns:52px 1fr; } .passos li::before { font-size:48px; }
+  }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="nome" href="#">Raphael Busquet<span class="cursor" aria-hidden="true">_</span></a>
+    <nav class="menu" aria-label="Seções">
+      <a href="#servicos">serviços</a>
+      <a href="#casos">casos</a>
+      <a href="#processo">processo</a>
+      <a href="#sobre">sobre</a>
+      <button class="tema" type="button" data-tema-botao aria-label="Trocar para o modo claro">☀︎</button>
+      <a class="botao" href="#contato">Agendar conversa</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap abertura">
+    <div>
+      <span class="rotulo">consultoria de IA e tecnologia</span>
+      <h1>Coloco a IA para <em>trabalhar</em> na sua empresa.</h1>
+      <p class="lead">Sou desenvolvedor e crio automações com IA que tiram o trabalho repetitivo da sua equipe: <span class="marcado">atendimento, vendas, conteúdo e processos internos</span>. Do primeiro esboço ao sistema funcionando.</p>
+      <div class="acoes">
+        <a class="botao" href="#contato">Agendar conversa gratuita</a>
+        <a class="botao linha" href="#casos">ver o que já construí →</a>
+      </div>
+      <ul class="provas">
+        <li><mark class="confirmar">X anos</mark> em tecnologia</li>
+        <li>desenvolvedor de sistemas</li>
+        <li>IA explicada todo dia nas redes</li>
+      </ul>
+    </div>
+
+    <div class="colagem" aria-label="Colagem: as mãos da Criação de Adão, de Michelangelo, com um cursor de terminal entre os dedos; Raphael Busquet recortado em primeiro plano">
+      <div class="afresco reticula"><img src="maos.webp" alt="" width="1000" height="470"></div>
+      <span class="faisca" aria-hidden="true">&gt;<span>_</span></span>
+      <span class="anot" aria-hidden="true">a faísca: ideia vira sistema</span>
+      <div class="eu"><img src="raphael.webp" alt="Raphael Busquet sorrindo, de óculos e camiseta preta" width="900" height="779"></div>
+      <div class="terminal" aria-label="Exemplos de automações rodando">
+        <div class="barra"><i></i><i></i><i></i><span>automacoes.log</span></div>
+        <ol id="log">
+          <li><span class="h">10:00</span> pautas do dia → Telegram <span class="ok">✓</span></li>
+          <li><span class="h">10:02</span> comentário "grok" → DM com o guia <span class="ok">✓</span></li>
+          <li><span class="h">10:05</span> pagamento aprovado → ebook no e-mail <span class="ok">✓</span></li>
+          <li><span class="h">10:09</span> vídeo pronto → revisão no celular <span class="ok">✓</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="manifesto">
+    <div class="wrap">
+      <figure class="sibila reticula">
+        <img src="sibila.webp" alt="A Sibila Líbica, de Michelangelo, abrindo um grande livro" width="800" height="873" loading="lazy">
+        <figcaption>Sibila Líbica · Michelangelo, Capela Sistina, 1511</figcaption>
+      </figure>
+      <div>
+        <span class="rotulo">manifesto</span>
+        <h2>Código é <em>arte</em>.</h2>
+        <p>Michelangelo passava meses estudando antes de pintar uma figura. Automação boa nasce do mesmo jeito: primeiro entender o seu negócio a fundo, depois escrever cada linha com cuidado, até a coisa funcionar sozinha, todo dia, sem ninguém lembrar que ela existe.</p>
+        <pre class="codigo" aria-label="Trecho de código ilustrativo"><i>while</i> (empresa.temTarefaRepetitiva()) {
+  tarefa = <b>entender</b>(processo)
+  <b>automatizar</b>(tarefa)   <span>// a equipe volta a pensar</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <section id="dores">
+    <div class="wrap">
+      <span class="rotulo">para quem é</span>
+      <h2>Sua empresa já sabe que precisa de IA. Falta saber <em>por onde começar</em>.</h2>
+      <ul class="dores">
+        <li><b>A equipe perde horas no repetitivo.</b>Copiar dados entre sistemas, responder as mesmas perguntas, montar o mesmo relatório toda semana.</li>
+        <li><b>O atendimento não dá conta.</b>Mensagens no Instagram e no WhatsApp ficam sem resposta, e cliente que espera compra no concorrente.</li>
+        <li><b>Cada um usa a IA do seu jeito.</b>Sem padrão, sem regra para os dados da empresa e sem medir se economizou tempo.</li>
+        <li><b>Já testaram ferramentas e nada ficou.</b>Assinaturas que ninguém usa, porque não foram ligadas aos processos de verdade.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="servicos" style="padding-top:0">
+    <div class="wrap">
+      <span class="rotulo">serviços</span>
+      <h2>Do primeiro mapa ao sistema <em>rodando sozinho</em>.</h2>
+      <p class="intro">Comece pelo diagnóstico e decida o resto depois, com o plano e o preço na mão.</p>
+      <div class="servicos">
+        <article class="servico destaque">
+          <span class="etiqueta">comece por aqui</span>
+          <span class="fn">diagnostico<span>()</span></span>
+          <h3>Diagnóstico de IA</h3>
+          <p>Entendo como a sua empresa funciona e mostro onde a IA economiza mais tempo e dinheiro.</p>
+          <ul><li>Mapa dos processos que dá para automatizar</li><li>Prioridades por impacto e esforço</li><li>Plano com prazo e preço de cada automação</li></ul>
+          <span class="prazo">≈ 1 a 2 semanas</span>
+        </article>
+        <article class="servico">
+          <span class="fn">automatizar<span>(processo)</span></span>
+          <h3>Automações e agentes</h3>
+          <p>Construo as automações e ligo aos sistemas que você já usa.</p>
+          <ul><li>Atendimento no Instagram e no WhatsApp</li><li>Agentes que respondem com os dados da empresa</li><li>Integrações entre planilhas, CRM, pagamentos e e-mail</li></ul>
+          <span class="prazo">por projeto</span>
+        </article>
+        <article class="servico">
+          <span class="fn">treinar<span>(equipe)</span></span>
+          <h3>Treinamento de equipes</h3>
+          <p>A sua equipe aprende a usar IA no trabalho dela, com exemplos do seu negócio.</p>
+          <ul><li>Workshop online ou presencial</li><li>Comandos prontos para cada área</li><li>Regras de uso seguro dos dados</li></ul>
+          <span class="prazo">meio dia a 2 dias</span>
+        </article>
+        <article class="servico">
+          <span class="fn">acompanhar<span>(mensal)</span></span>
+          <h3>Acompanhamento</h3>
+          <p>Para evoluir sem parar: ajustes, novas automações e suporte.</p>
+          <ul><li>Revisão do que está rodando</li><li>Novas automações a cada mês</li><li>Canal direto comigo</li></ul>
+          <span class="prazo">mensal</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="casos" style="background:var(--papel-2); border-block:1px solid var(--linha)">
+    <div class="wrap">
+      <span class="rotulo">casos reais</span>
+      <h2>Sistemas que eu construí e uso <em>todos os dias</em>.</h2>
+      <p class="intro">Antes de vender automação, automatizei o meu próprio negócio. É o mesmo trabalho que faço para clientes.</p>
+      <div class="casos">
+        <article class="caso" style="background:var(--papel)">
+          <div><span class="arquivo">casos/resposta-por-dm.md</span><h3>Resposta automática por DM</h3><p class="tipo">Instagram · atendimento</p></div>
+          <dl>
+            <dt>problema</dt><dd>Cada vídeo gera centenas de comentários pedindo o mesmo link. Responder um a um toma o dia.</dd>
+            <dt>solução</dt><dd>Quem comenta a palavra-chave recebe o link por mensagem direta, e o sistema confere se a pessoa segue o perfil antes de enviar.</dd>
+            <dt>resultado</dt><dd>Nenhuma resposta manual. Cada palavra-chave leva a um material diferente: guia, ebook ou página de venda.</dd>
+          </dl>
+        </article>
+        <article class="caso" style="background:var(--papel)">
+          <div><span class="arquivo">casos/estudio-coincubo.md</span><h3>Estúdio de vídeos da CoinCubo</h3><p class="tipo">conteúdo · vídeo diário</p></div>
+          <dl>
+            <dt>problema</dt><dd>Publicar análises de cripto todos os dias exige pesquisa, roteiro, voz, edição e capa.</dd>
+            <dt>solução</dt><dd>Todo dia às 10h chegam as pautas no Telegram. Um toque escolhe o tema e o vídeo volta pronto, com roteiro, narração, edição, capa e legenda.</dd>
+            <dt>resultado</dt><dd>Depois da aprovação no celular, o vídeo sai no Instagram, no YouTube e no TikTok.</dd>
+          </dl>
+        </article>
+        <article class="caso" style="background:var(--papel)">
+          <div><span class="arquivo">casos/loja-do-ebook.md</span><h3>Loja com entrega automática</h3><p class="tipo">vendas · pagamentos</p></div>
+          <dl>
+            <dt>problema</dt><dd>Vender um produto digital sem ter de mandar cada arquivo à mão.</dd>
+            <dt>solução</dt><dd>Pagamento pelo Stripe, preço em reais ou em euros conforme o país e desconto para quem chega pelo Instagram.</dd>
+            <dt>resultado</dt><dd>O pagamento aprovado dispara o e-mail com o ebook na hora, de dia ou de madrugada.</dd>
+          </dl>
+        </article>
+        <article class="caso" style="background:var(--papel)">
+          <div><span class="arquivo">casos/editor-de-video.md</span><h3>Editor de vídeo com IA</h3><p class="tipo">ferramenta interna</p></div>
+          <dl>
+            <dt>problema</dt><dd>Transformar gravações longas em cortes curtos leva horas de edição.</dd>
+            <dt>solução</dt><dd>Um editor que transcreve, corta pausas, legenda, encontra os melhores trechos com nota e segue o rosto no formato vertical.</dd>
+            <dt>resultado</dt><dd>Os cortes saem prontos para Reels, Shorts e TikTok a partir de uma única gravação.</dd>
+          </dl>
+        </article>
+      </div>
+      <p class="nota">// projetos de clientes entram aqui conforme forem autorizados</p>
+    </div>
+  </section>
+
+  <section id="processo">
+    <div class="wrap">
+      <span class="rotulo">processo</span>
+      <h2>Como Michelangelo: <em>esboço, cartão, afresco</em>.</h2>
+      <p class="intro">Antes de pintar o teto da Capela Sistina, ele desenhava estudos e depois cartões em tamanho real. Trabalho na mesma ordem.</p>
+      <div class="processo">
+        <figure class="estudo">
+          <img src="estudo.webp" alt="Estudos de Michelangelo em sanguínea para a Sibila Líbica" width="900" height="1200" loading="lazy">
+          <span class="anot" aria-hidden="true">o estudo vem antes</span>
+        </figure>
+        <ol class="passos">
+          <li><div><span class="etapa">esboço · 30 minutos · gratuito</span><h3>Conversa</h3><p>Você conta o que toma tempo da sua equipe. Eu digo, com franqueza, se a IA resolve e por onde começar.</p></div></li>
+          <li><div><span class="etapa">cartão · 1 a 2 semanas</span><h3>Diagnóstico</h3><p>Mapeio os processos e entrego o plano em tamanho real: prioridades, prazo e preço fechado de cada automação.</p></div></li>
+          <li><div><span class="etapa">afresco · por projeto</span><h3>Implementação</h3><p>Construo, testo com a sua equipe e deixo tudo documentado. Depois, se quiser, sigo acompanhando.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" style="background:var(--papel-2); border-block:1px solid var(--linha)">
+    <div class="wrap sobre">
+      <div class="retrato"><img src="raphael.webp" alt="" width="900" height="779" loading="lazy"><span class="anot" aria-hidden="true">eu, o artesão</span></div>
+      <div>
+        <span class="rotulo">sobre</span>
+        <h2>Eu programo o que <em>recomendo</em>.</h2>
+        <p>Sou Raphael Busquet. Há <mark class="confirmar">X anos</mark> trabalho com tecnologia, desenvolvendo sistemas, sites e integrações para empresas<mark class="confirmar">, como …</mark>.</p>
+        <p>Nas redes, explico IA para quem não é da área. Na consultoria, faço o caminho inverso: pego a necessidade do negócio e transformo em sistema que funciona, sem jargão no meio.</p>
+        <ul class="stack" aria-label="Ferramentas que uso">
+          <li>ChatGPT</li><li>Claude</li><li>Gemini</li><li>Python</li><li>.NET</li><li>React</li><li>Angular</li><li>Cloudflare</li><li>Stripe</li><li>APIs da Meta</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="perguntas">
+    <div class="wrap">
+      <span class="rotulo">perguntas frequentes</span>
+      <h2>Antes de conversar.</h2>
+      <div class="perguntas">
+        <details><summary>Preciso entender de tecnologia?</summary><p>Não. Você explica como o trabalho é feito hoje; a parte técnica é comigo. No fim, a sua equipe recebe treinamento para usar o que foi construído.</p></details>
+        <details><summary>Quanto custa?</summary><p>Depende do tamanho do projeto. A primeira conversa é gratuita, e o diagnóstico termina com o preço fechado de cada automação, para você decidir sem surpresa.</p></details>
+        <details><summary>Atende empresas de qualquer lugar?</summary><p>Sim. O trabalho é online, com empresas no Brasil e em Portugal.</p></details>
+        <details><summary>E os dados da minha empresa?</summary><p>Uso contas e ferramentas da própria empresa sempre que possível, e definimos juntos o que pode ou não passar por uma IA.</p></details>
+        <details><summary>Quanto tempo até ver resultado?</summary><p>A primeira automação costuma entrar em funcionamento logo depois do diagnóstico. O prazo de cada uma vem no plano.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" style="background:var(--papel-2); border-top:1px solid var(--linha)">
+    <div class="wrap contato">
+      <div>
+        <span class="rotulo">vamos conversar</span>
+        <h2>Conte o que toma tempo da sua <em>equipe</em>.</h2>
+        <p class="intro">Respondo pessoalmente em até 1 dia útil para marcar a conversa de 30 minutos.</p>
+        <ul class="lista"><li>sem compromisso</li><li>sem jargão</li><li>você sai com pelo menos uma ideia para aplicar</li></ul>
+      </div>
+      <form class="pedido" id="pedido" novalidate>
+        <span class="cab" aria-hidden="true">nova_conversa.txt</span>
+        <div class="campo"><label for="nome">nome</label><input id="nome" name="nome" autocomplete="name" required></div>
+        <div class="campo"><label for="empresa">empresa</label><input id="empresa" name="empresa" autocomplete="organization" required></div>
+        <div class="campo"><label for="email">e-mail</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div class="campo"><label for="whatsapp">whatsapp <small>(opcional)</small></label><input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel"></div>
+        <div class="campo cheio"><label for="equipe">tamanho da equipe</label>
+          <select id="equipe" name="equipe" required>
+            <option value="">Escolha</option><option>Só eu</option><option>2 a 10 pessoas</option><option>11 a 50 pessoas</option><option>51 a 200 pessoas</option><option>Mais de 200 pessoas</option>
+          </select></div>
+        <div class="campo cheio"><label for="mensagem">o que você quer resolver?</label><textarea id="mensagem" name="mensagem" required placeholder="Ex.: perdemos muito tempo respondendo as mesmas perguntas no WhatsApp."></textarea></div>
+        <div class="escondido" aria-hidden="true"><label for="site">site</label><input id="site" name="site" tabindex="-1" autocomplete="off"></div>
+        <button class="botao" type="submit">Pedir conversa gratuita</button>
+        <p class="aviso" id="aviso" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© Raphael Busquet · consultoria de IA e tecnologia</span>
+  <nav class="redes" aria-label="Redes sociais">
+      <a href="https://www.instagram.com/raphaelbusquet/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
+      <a href="https://www.tiktok.com/@raphaelbusquet" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+      <a href="https://www.youtube.com/@raphaelbusquet" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+      <a href="https://x.com/raphabusquet" target="_blank" rel="noopener" aria-label="X (Twitter)" title="X (Twitter)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+      <a href="https://www.linkedin.com/in/raphaelbusquet/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a href="https://www.threads.com/@raphaelbusquet" target="_blank" rel="noopener" aria-label="Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>
+      <a href="https://raphaelbusquet.substack.com" target="_blank" rel="noopener" aria-label="Substack" title="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
+      <a href="https://github.com/raphaelbusquet" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </nav>
+    <span class="creditos">Obras de Michelangelo Buonarroti (domínio público): A Criação de Adão e Sibila Líbica, Capela Sistina; Estudos para a Sibila Líbica, The Metropolitan Museum of Art.</span>
+  </div>
+</footer>
+
+<script>
+  // Tema: segue o sistema; o botão troca e lembra a escolha neste navegador.
+  (() => {
+    const botao = document.querySelector("[data-tema-botao]");
+    const atual = () => document.documentElement.dataset.tema || (matchMedia("(prefers-color-scheme: light)").matches ? "claro" : "escuro");
+    const pinta = () => { const claro = atual() === "claro"; botao.textContent = claro ? "☾" : "☀︎"; botao.setAttribute("aria-label", claro ? "Trocar para o modo escuro" : "Trocar para o modo claro"); };
+    botao.addEventListener("click", () => {
+      const novo = atual() === "claro" ? "escuro" : "claro";
+      document.documentElement.dataset.tema = novo;
+      try { localStorage.setItem("tema", novo); } catch (e) {}
+      pinta();
+    });
+    pinta();
+  })();
+
+  // Terminal: as linhas vão rolando, como um log de verdade. Começa já cheio (a página é completa parada).
+  (() => {
+    const log = document.getElementById("log");
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const eventos = [
+      "novo contato no site → Telegram",
+      "planilha atualizada → relatório enviado",
+      "pergunta no WhatsApp → resposta com o catálogo",
+      'comentário "free" → DM com o passo a passo',
+      "reunião gravada → resumo e tarefas no CRM",
+      "nova venda → e-mail de boas-vindas",
+    ];
+    let i = 0, min = 9;
+    setInterval(() => {
+      min += 2 + (i % 3);
+      const li = document.createElement("li");
+      li.className = "nova";
+      li.innerHTML = `<span class="h">10:${String(min % 60).padStart(2, "0")}</span> ${eventos[i++ % eventos.length]} <span class="ok">✓</span>`;
+      log.append(li);
+      if (log.children.length > 4) log.firstElementChild.remove();
+    }, 2600);
+  })();
+
+  // Pedido de conversa: vai para o Worker, que avisa o Raphael no Telegram.
+  (() => {
+    const ENDPOINT = "https://coincubo-newsletter.raphaelbusquet.workers.dev/pedido";
+    const form = document.getElementById("pedido"), aviso = document.getElementById("aviso"), botao = form.querySelector("button");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const faltando = [...form.querySelectorAll("[required]")].find((c) => !c.value.trim());
+      if (faltando) { aviso.className = "aviso erro"; aviso.textContent = `Preencha o campo "${form.querySelector(`label[for=${faltando.id}]`).firstChild.textContent.trim()}".`; faltando.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(form.email.value.trim())) { aviso.className = "aviso erro"; aviso.textContent = "Confira o e-mail digitado."; form.email.focus(); return; }
+      botao.disabled = true; aviso.className = "aviso"; aviso.textContent = "enviando…";
+      try {
+        const dados = Object.fromEntries(new FormData(form));
+        const r = await fetch(ENDPOINT, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(dados) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok || !d.ok) throw new Error(d.erro || "Não deu certo agora. Tente de novo em instantes.");
+        aviso.className = "aviso ok";
+        aviso.textContent = `Recebido, ${dados.nome.split(" ")[0]}! Respondo em até 1 dia útil para marcarmos a conversa.`;
+        form.reset();
+      } catch (err) {
+        aviso.className = "aviso erro";
+        aviso.textContent = err.message === "Failed to fetch" ? "Sem conexão agora. Tente de novo em instantes." : err.message;
+      } finally { botao.disabled = false; }
+    });
+  })();
+</script>
+</body>
+</html>
