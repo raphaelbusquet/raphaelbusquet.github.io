@@ -7,164 +7,129 @@
 <meta name="description" content="Canal no YouTube, meu setup, newsletter e ebook.">
 <meta property="og:title" content="Raphael Busquet">
 <meta property="og:description" content="Canal no YouTube, meu setup, newsletter e ebook.">
-<meta property="og:image" content="https://raphaelbusquet.github.io/links/img/foto.jpg">
-<meta name="theme-color" content="#000000">
+<meta property="og:image" content="https://raphaelbusquet.github.io/links/img/retrato.webp">
+<meta name="theme-color" content="#ECE8DF">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<link rel="icon" href="img/foto.jpg">
+<link rel="icon" href="https://raphaelbusquet.com/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    color-scheme: dark;
-    --fundo: #141414;
-    --cartao: #000;
-    --botao: rgba(255, 255, 255, .07);
-    --botao-hover: rgba(255, 255, 255, .12);
-    --texto: #fff;
-    --fraco: #b5b5b5;
-    --luz-verde: rgba(16, 150, 120, .22);
-    --luz-azul: rgba(50, 80, 255, .20);
+    --papel: #ECE8DF;
+    --papel-2: #E3DED2;
+    --tinta: #151614;
+    --claro: #EFEBE2;
+    --linha: #CFC9BB;
+    --fraco: #6E6A60;
+    --suave: #3D3A33;
+    --verde: #1FBF8F;
+    --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--fundo); }
+  html, body { margin: 0; background: var(--papel); }
   body {
-    color: var(--texto);
-    font: 500 16px/1.4 "Quicksand", system-ui, sans-serif;
+    color: var(--tinta);
+    font: 400 16px/1.5 var(--sans);
+    -webkit-font-smoothing: antialiased;
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    padding: 40px 16px;
+    padding: 48px 16px 32px;
   }
-  main {
-    width: 100%;
-    max-width: 420px;
-    background: var(--cartao);
-    border-radius: 20px;
-    padding: 36px 16px 20px;
-    text-align: center;
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-  }
-  /* Luzes esfumaçadas nas cores da foto, atrás de tudo. */
-  main::before, main::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    width: 360px; height: 360px;
-    border-radius: 50%;
-    filter: blur(70px);
-    pointer-events: none;
-    animation: flutuar 18s ease-in-out infinite alternate;
-  }
-  main::before {
-    background: var(--luz-verde);
-    width: 460px; height: 460px;
-    top: -140px; left: -200px;
-    filter: blur(110px);
-  }
-  main::after { background: var(--luz-azul); bottom: 120px; right: -160px; animation-delay: -9s; }
-  .luz {
-    position: absolute; z-index: -1;
-    width: 300px; height: 300px; left: 50%; top: 42%;
-    margin-left: -150px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(50, 80, 255, .12), transparent 70%);
-    filter: blur(50px);
-    pointer-events: none;
-  }
-  @keyframes flutuar {
-    to { transform: translate(40px, 60px) scale(1.15); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    main::before, main::after { animation: none; }
-  }
-  .foto {
-    width: 148px; height: 148px;
-    margin: 0 auto 18px;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-  .foto img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); display: block; }
-  h1 { font-size: 1.75rem; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+  main { width: 100%; max-width: 440px; }
+  .topo { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid var(--linha); }
+  .marca { display: flex; align-items: center; gap: 10px; font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fraco); }
+  .marca b { width: 26px; height: 26px; display: grid; place-items: center; background: var(--tinta); color: var(--claro); font-weight: 500; font-size: 10px; letter-spacing: 0; }
+  .status { display: flex; align-items: center; gap: 8px; font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fraco); }
+  .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--verde); }
+  .perfil { display: grid; grid-template-columns: 112px 1fr; gap: 20px; align-items: end; padding: 28px 0 26px; }
+  .perfil img { width: 112px; height: 112px; display: block; object-fit: cover; filter: grayscale(1); }
+  .rotulo { font: 500 11px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fraco); margin: 0 0 8px; }
+  h1 { font-size: 2.4rem; font-weight: 300; letter-spacing: -.035em; line-height: .98; margin: 0; }
+  h1 em { font-weight: 400; }
   .chamada {
-    display: inline-block;
-    margin: 4px 0 20px;
-    font-size: .72rem; font-weight: 700;
-    letter-spacing: .04em; text-transform: uppercase;
-    color: var(--texto); text-decoration: none;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0; border-top: 1px solid var(--tinta);
+    font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--tinta); text-decoration: none;
   }
-  .chamada:hover { text-decoration: underline; }
+  .chamada:hover { color: var(--fraco); }
   .video {
     position: relative;
     aspect-ratio: 16 / 9;
-    border-radius: 12px;
     overflow: hidden;
-    background: #111;
-    margin-bottom: 14px;
+    background: var(--tinta);
+    margin-bottom: 28px;
   }
   .video iframe, .video button { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .video button { padding: 0; cursor: pointer; background: none; }
   .video button img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .video button svg { position: absolute; left: 50%; top: 50%; width: 68px; transform: translate(-50%, -50%); }
-  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .video button svg { position: absolute; left: 50%; top: 50%; width: 60px; transform: translate(-50%, -50%); }
+  ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tinta); }
   .link {
-    display: flex; align-items: center; gap: 12px;
-    min-height: 60px;
-    padding: 6px 52px 6px 6px;
-    border-radius: 999px;
-    background: var(--botao);
-    border: 1px solid rgba(255, 255, 255, .06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: var(--texto); text-decoration: none;
-    font-weight: 700; font-size: 1rem;
-    transition: background .15s, transform .15s;
+    display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 8px;
+    min-height: 68px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--linha);
+    color: var(--tinta); text-decoration: none;
+    font-size: 1.2rem; font-weight: 300; letter-spacing: -.015em; line-height: 1.2;
+    transition: background .15s, padding .15s;
   }
-  .link:hover { background: var(--botao-hover); }
-  .link:active { transform: scale(.98); }
-  .link:focus-visible { outline: 2px solid var(--texto); outline-offset: 3px; }
-  .link img {
-    width: 48px; height: 48px; flex: none;
-    border-radius: 50%;
-    border: 1px solid #2c2c2c;
-  }
-  .link span { flex: 1; }
-  .redes { margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-  .redes a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; color: var(--fraco); transition: color .15s, background .15s; }
-  .redes a:hover, .redes a:focus-visible { color: var(--texto); background: var(--botao); }
-  .redes svg { width: 20px; height: 20px; fill: currentColor; }
-  footer { margin-top: 14px; font-size: .75rem; color: var(--fraco); }
-  @media (max-width: 480px) {
-    body { padding: 0; }
-    main { border-radius: 0; min-height: 100vh; padding-top: 44px; }
+  .link b { font: 500 11px/1 var(--mono); color: var(--fraco); letter-spacing: .04em; }
+  .link i { font-style: normal; font-family: var(--mono); color: var(--fraco); transition: transform .15s; }
+  .link small { display: block; margin-top: 3px; font: 500 10.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fraco); }
+  .link:hover { background: var(--papel-2); padding-left: 10px; }
+  .link:hover i { transform: translateX(3px); color: var(--tinta); }
+  .link.principal { background: var(--tinta); color: var(--claro); border-bottom-color: var(--tinta); padding-left: 14px; padding-right: 14px; }
+  .link.principal b, .link.principal i, .link.principal small { color: rgba(239, 235, 226, .6); }
+  .link.principal:hover { background: #000; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; }
+  .redes { margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+  .redes a { width: 40px; height: 40px; display: grid; place-items: center; color: var(--fraco); transition: color .15s, background .15s; }
+  .redes a:hover, .redes a:focus-visible { color: var(--tinta); background: var(--papel-2); }
+  .redes svg { width: 18px; height: 18px; fill: currentColor; }
+  footer { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--linha); display: flex; justify-content: space-between; font: 500 10.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fraco); }
+  footer a { color: inherit; text-decoration: none; }
+  footer a:hover { color: var(--tinta); }
+  @media (max-width: 380px) {
+    .perfil { grid-template-columns: 92px 1fr; gap: 16px; }
+    .perfil img { width: 92px; height: 92px; }
+    h1 { font-size: 2rem; }
   }
 </style>
 </head>
 <body>
 <main>
-  <div class="luz" aria-hidden="true"></div>
-  <div class="foto"><img src="img/foto.jpg" alt="Foto de Raphael Busquet" width="148" height="148"></div>
-  <h1>Raphael Busquet</h1>
-  <a class="chamada" href="https://www.youtube.com/@raphaelbusquet?sub_confirmation=1" target="_blank" rel="noopener">Inscreva-se no canal do YouTube 👇</a>
-
+  <div class="topo">
+    <span class="marca"><b>RB</b>Links</span>
+    <span class="status">Brasil · Portugal</span>
+  </div>
+  <div class="perfil">
+    <img src="img/retrato.webp" alt="Retrato em preto e branco de Raphael Busquet" width="112" height="112">
+    <div>
+      <p class="rotulo">IA aplicada · Tecnologia</p>
+      <h1>Raphael <em>Busquet</em></h1>
+    </div>
+  </div>
+  <a class="chamada" href="https://www.youtube.com/@raphaelbusquet?sub_confirmation=1" target="_blank" rel="noopener"><span>Inscreva-se no canal do YouTube</span><span aria-hidden="true">↓</span></a>
   <div class="video" id="video">
     <button type="button" aria-label="Assistir: A mentalidade que me ajudou a realizar boa parte dos meus objetivos">
       <img src="https://i.ytimg.com/vi/_amsgsVau0E/hqdefault.jpg" alt="">
-      <svg viewBox="0 0 68 48" aria-hidden="true"><path d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2.3 34 .3 34 .3s-21.2 0-26.5 1.4a8.6 8.6 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.6 8.6 0 0 0 6 6C12.8 47.7 34 47.7 34 47.7s21.2 0 26.5-1.4a8.6 8.6 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" fill="#f00"/><path d="M45 24 27 14v20z" fill="#fff"/></svg>
+      <svg viewBox="0 0 68 48" aria-hidden="true"><path d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2.3 34 .3 34 .3s-21.2 0-26.5 1.4a8.6 8.6 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.6 8.6 0 0 0 6 6C12.8 47.7 34 47.7 34 47.7s21.2 0 26.5-1.4a8.6 8.6 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" fill="#151614"/><path d="M45 24 27 14v20z" fill="#fff"/></svg>
     </button>
   </div>
 
   <ul>
-    <li><a class="link" href="https://raphaelbusquet.com" target="_blank" rel="noopener">
-      <img src="img/consultoria.png" alt="" width="48" height="48"><span>Consultoria de IA</span></a></li>
-    <li><a class="link" href="https://raphaelbusquet.github.io/setup/">
-      <img src="img/setup.png" alt="" width="48" height="48"><span>Meu Setup</span></a></li>
+    <li><a class="link principal" href="https://raphaelbusquet.com" target="_blank" rel="noopener">
+      <b>01</b><span>Consultoria de IA<small>Para empresas · raphaelbusquet.com</small></span><i aria-hidden="true">→</i></a></li>
     <li><a class="link" href="https://raphaelbusquet.substack.com" target="_blank" rel="noopener">
-      <img src="img/substack.png" alt="" width="48" height="48"><span>Newsletter</span></a></li>
+      <b>02</b><span>Newsletter<small>Substack</small></span><i aria-hidden="true">→</i></a></li>
     <li><a class="link" href="https://ebook-1000-prompts.raphaelbusquet.workers.dev" target="_blank" rel="noopener">
-      <img src="img/ebook.png" alt="" width="48" height="48"><span>Ebook</span></a></li>
+      <b>03</b><span>Ebook 1000 Prompts Empreendedores<small>PDF</small></span><i aria-hidden="true">→</i></a></li>
+    <li><a class="link" href="https://raphaelbusquet.github.io/setup/">
+      <b>04</b><span>Meu Setup<small>Equipamentos que uso</small></span><i aria-hidden="true">→</i></a></li>
   </ul>
 
   <nav class="redes" aria-label="Redes sociais">
@@ -177,7 +142,7 @@
     <a href="https://raphaelbusquet.substack.com" target="_blank" rel="noopener" aria-label="Substack" title="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
     <a href="https://github.com/raphaelbusquet" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
   </nav>
-  <footer>© Raphael Busquet</footer>
+  <footer><span>© Raphael Busquet</span><a href="https://raphaelbusquet.com">raphaelbusquet.com</a></footer>
 </main>
 <script>
   // Carrega o player só no toque: a página abre rápido mesmo no 4G.
